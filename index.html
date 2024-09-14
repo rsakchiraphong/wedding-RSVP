@@ -68,12 +68,6 @@
             margin-bottom: 10px;
             font-weight: bold;
         }
-        .no-results {
-            text-align: center;
-            margin-top: 20px;
-            color: #FF3B30;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -89,17 +83,24 @@
     const mockData = [
         { sNo: 1, firstName: "Nishit", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613758106377", nOrV: "D" },
         { sNo: 2, firstName: "Mona", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613588044137", nOrV: "D" },
-        // Continue the list...
+        { sNo: 3, firstName: "Sahil", lastName: "Sakchiraphong", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613588044137", nOrV: "D" },
+        { sNo: 81, firstName: "Dalpat", lastName: "Lodha", arrivalDate: "28/11/2024", arrivalFlight: "AI378", arrivalTime: "8:10:00 AM", depDate: "1/12/2024", depFlight: "AI335", depTime: "5:55:00 PM", passportNo: "", tel: "91 8003777553", nOrV: "V" },
+        { sNo: 94, firstName: "Bhagyashree Himalay", lastName: "Dassani", arrivalDate: "27/11/2024", arrivalFlight: "6E1071", arrivalTime: "10:05:00 AM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "", nOrV: "" }
     ];
 
     function renderGuestList(guests) {
         const guestList = document.getElementById('guestList');
         const guestCount = document.getElementById('guestCount');
-        guestList.innerHTML = guests.length ? guests.map(guest => 
-            `<div class="guest-item" onclick="showGuestDetails(${guest.sNo})">
-                ${guest.firstName} ${guest.lastName}
-            </div>`
-        ).join('') : '<div class="no-results">No guests found</div>';
+        
+        guestList.innerHTML = ''; // Clear previous entries
+        guests.forEach(guest => {
+            const guestItem = document.createElement('div');
+            guestItem.className = 'guest-item';
+            guestItem.textContent = `${guest.firstName} ${guest.lastName}`;
+            guestItem.onclick = () => showGuestDetails(guest.sNo);
+            guestList.appendChild(guestItem);
+        });
+        
         guestCount.textContent = `Displaying ${guests.length} guests`;
     }
 
@@ -151,9 +152,9 @@
         searchGuests(e.target.value);
     });
 
+    // Initial render of all guests
     document.addEventListener('DOMContentLoaded', function() {
         renderGuestList(mockData);
-        document.getElementById('searchInput').focus();
     });
     </script>
 </body>
