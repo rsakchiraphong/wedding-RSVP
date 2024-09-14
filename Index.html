@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Guest Finder</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 50px;
+        }
+        h1 { 
+            font-size: 2.5em; 
+            text-align: center; 
+            margin-bottom: 30px;
+            color: #007AFF;
+        }
+        #searchInput { 
+            width: 100%; 
+            padding: 15px; 
+            font-size: 1.2em; 
+            margin-bottom: 20px; 
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        #guestList { 
+            height: 300px; 
+            overflow-y: auto; 
+            border: 1px solid #eee; 
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .guest-item { 
+            padding: 10px; 
+            cursor: pointer; 
+            border-bottom: 1px solid #eee; 
+            transition: background-color 0.3s ease;
+        }
+        .guest-item:hover { background-color: #f9f9f9; }
+        #guestDetails { 
+            margin-top: 20px; 
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.05);
+        }
+        .missing-info { color: #FF3B30; }
+        .section { margin-bottom: 15px; }
+        .section h3 { 
+            color: #007AFF; 
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wedding Guest Finder</h1>
+        <input type="text" id="searchInput" placeholder="Search for guests...">
+        <div id="guestList"></div>
+        <div id="guestDetails"></div>
+    </div>
+
+    <script>
+    const mockData = [
+        { sNo: 1, firstName: "Nishit", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613758106377", nOrV: "D" },
+        { sNo: 2, firstName: "Mona", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613588044137", nOrV: "D" },
+        { sNo: 3, firstName: "Rahul", lastName: "Bapna", arrivalDate: "25/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "12134460147", nOrV: "D" },
+        // ... [Include all 94 guests here] ...
+        { sNo: 81, firstName: "Dalpat", lastName: "Lodha", arrivalDate: "28/11/2024", arrivalFlight: "AI378", arrivalTime: "8:10:00 AM", depDate: "1/12/2024", depFlight: "AI335", depTime: "5:55:00 PM", passportNo: "", tel: "91 8003777553", nOrV: "V" },
+        // ... [Continue with the rest of the guests up to 94] ...
+        { sNo: 94, firstName: "Bhagyashree Himalay", lastName: "Dassani", arrivalDate: "27/11/2024", arrivalFlight: "6E1071", arrivalTime: "10:05:00 AM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "", nOrV: "" }
+    ];
+
+    function renderGuestList(guests) {
+        const guestList = document.getElementById('guestList');
+        guestList.innerHTML = guests.map(guest => 
+            `<div class="guest-item" onclick="showGuestDetails(${guest.sNo})">
+                ${guest.firstName} ${guest.lastName}
+            </div>`
+        ).join('');
+    }
+
+    function showGuestDetails(sNo) {
+        const guest = mockData.find(g => g.sNo === sNo);
+        const detailsDiv = document.getElementById('guestDetails');
+        if (guest) {
+            const missingFields = ['arrivalDate', 'arrivalFlight', 'arrivalTime', 'depDate', 'depFlight', 'depTime', 'passportNo', 'tel', 'nOrV'].filter(field => !guest[field]);
+            detailsDiv.innerHTML = `
+                <h2>${guest.firstName} ${guest.lastName}</h2>
+                <div class="section">
+                    <h3>Arrival</h3>
+                    <p><strong>Date:</strong> ${guest.arrivalDate || 'Not specified'}</p>
+                    <p><strong>Flight:</strong> ${guest.arrivalFlight || 'Not specified'}</p>
+                    <p><strong>Time:</strong> ${guest.arrivalTime || 'Not specified'}</p>
+                </div>
+                <div class="section">
+                    <h3>Departure</h3>
+                    <p><strong>Date:</strong> ${guest.depDate || 'Not specified'}</p>
+                    <p><strong>Flight:</strong> ${guest.depFlight || 'Not specified'}</p>
+                    <p><strong>Time:</strong> ${guest.depTime || 'Not specified'}</p>
+                </div>
+                <div class="section">
+                    <h3>Additional Information</h3>
+                    <p><strong>Passport:</strong> ${guest.passportNo || 'Not provided'}</p>
+                    <p><strong>Contact:</strong> ${guest.tel || 'Not provided'}</p>
+                    <p><strong>Diet:</strong> ${guest.nOrV === 'V' ? 'Vegetarian' : guest.nOrV === 'N' ? 'Non-vegetarian' : 'Not specified'}</p>
+                </div>
+                <div class="section missing-info">
+                    <h3>Missing Information</h3>
+                    <p>${missingFields.length > 0 ? `Missing: ${missingFields.join(', ')}` : 'All information provided'}</p>
+                </div>
+            `;
+        } else {
+            detailsDiv.innerHTML = '<p>Guest not found.</p>';
+        }
+    }
+
+    function searchGuests(searchTerm) {
+        const filteredGuests = mockData.filter(guest => 
+            Object.values(guest).some(value => 
+                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+        renderGuestList(filteredGuests);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        searchGuests(e.target.value);
+    });
+
+    // Initial render of all guests
+    renderGuestList(mockData);
+    </script>
+</body>
+</html>
