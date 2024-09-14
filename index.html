@@ -80,73 +80,33 @@
     </div>
 
     <script>
-    const guestList = [
-        {
-            sNo: 1,
-            firstName: "Nishit",
-            lastName: "Bapna",
-            arrivalDate: "11/24/24",
-            arrivalFlight: "CX773",
-            arrivalTime: "5:40:00 PM",
-            checkOut: "",
-            depFlight: "",
-            depTime: "",
-            passportNo: "",
-            tel: "8613758106377",
-            nOrV: ""
-        },
-        {
-            sNo: 2,
-            firstName: "Mona",
-            lastName: "Bapna",
-            arrivalDate: "11/24/24",
-            arrivalFlight: "CX773",
-            arrivalTime: "5:40:00 PM",
-            checkOut: "",
-            depFlight: "",
-            depTime: "",
-            passportNo: "",
-            tel: "8613588044137",
-            nOrV: ""
-        },
-        // ... [All 130 guests would be listed here] ...
-        {
-            sNo: 130,
-            firstName: "Stephanie Ying Tung",
-            lastName: "Chen",
-            arrivalDate: "11/27/24",
-            arrivalFlight: "FD4112",
-            arrivalTime: "3:50:00 PM",
-            checkOut: "12/1/24",
-            depFlight: "",
-            depTime: "9:50:00 PM",
-            passportNo: "682407852",
-            tel: "",
-            nOrV: "N"
-        }
+    const mockData = [
+        { sNo: 1, firstName: "Nishit", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613758106377", nOrV: "D" },
+        { sNo: 2, firstName: "Mona", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613588044137", nOrV: "D" },
+        // ... [Include all 94 guests here] ...
+        { sNo: 81, firstName: "Dalpat", lastName: "Lodha", arrivalDate: "28/11/2024", arrivalFlight: "AI378", arrivalTime: "8:10:00 AM", depDate: "1/12/2024", depFlight: "AI335", depTime: "5:55:00 PM", passportNo: "", tel: "91 8003777553", nOrV: "V" },
+        // ... [Continue with the rest of the guests up to 94] ...
+        { sNo: 94, firstName: "Bhagyashree Himalay", lastName: "Dassani", arrivalDate: "27/11/2024", arrivalFlight: "6E1071", arrivalTime: "10:05:00 AM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "", nOrV: "" }
     ];
 
-    function findMissingData(guest) {
-        const requiredFields = ['firstName', 'lastName', 'arrivalDate', 'arrivalFlight', 'arrivalTime', 'checkOut', 'depFlight', 'depTime', 'passportNo', 'tel', 'nOrV'];
-        return requiredFields.filter(field => !guest[field]);
-    }
-
     function renderGuestList(guests) {
-        const guestListElement = document.getElementById('guestList');
+        console.log("Rendering guest list with", guests.length, "guests");
+        const guestList = document.getElementById('guestList');
         const guestCount = document.getElementById('guestCount');
-        guestListElement.innerHTML = guests.map(guest => 
+        guestList.innerHTML = guests.map(guest => 
             `<div class="guest-item" onclick="showGuestDetails(${guest.sNo})">
                 ${guest.firstName} ${guest.lastName}
             </div>`
         ).join('');
         guestCount.textContent = `Displaying ${guests.length} guests`;
+        console.log("Guest list HTML:", guestList.innerHTML);
     }
 
     function showGuestDetails(sNo) {
-        const guest = guestList.find(g => g.sNo === sNo);
+        const guest = mockData.find(g => g.sNo === sNo);
         const detailsDiv = document.getElementById('guestDetails');
         if (guest) {
-            const missingFields = findMissingData(guest);
+            const missingFields = ['arrivalDate', 'arrivalFlight', 'arrivalTime', 'depDate', 'depFlight', 'depTime', 'passportNo', 'tel', 'nOrV'].filter(field => !guest[field]);
             detailsDiv.innerHTML = `
                 <h2>${guest.firstName} ${guest.lastName}</h2>
                 <div class="section">
@@ -157,7 +117,7 @@
                 </div>
                 <div class="section">
                     <h3>Departure</h3>
-                    <p><strong>Check Out:</strong> ${guest.checkOut || 'Not specified'}</p>
+                    <p><strong>Date:</strong> ${guest.depDate || 'Not specified'}</p>
                     <p><strong>Flight:</strong> ${guest.depFlight || 'Not specified'}</p>
                     <p><strong>Time:</strong> ${guest.depTime || 'Not specified'}</p>
                 </div>
@@ -165,7 +125,7 @@
                     <h3>Additional Information</h3>
                     <p><strong>Passport:</strong> ${guest.passportNo || 'Not provided'}</p>
                     <p><strong>Contact:</strong> ${guest.tel || 'Not provided'}</p>
-                    <p><strong>Diet:</strong> ${guest.nOrV || 'Not specified'}</p>
+                    <p><strong>Diet:</strong> ${guest.nOrV === 'V' ? 'Vegetarian' : guest.nOrV === 'N' ? 'Non-vegetarian' : 'Not specified'}</p>
                 </div>
                 <div class="section missing-info">
                     <h3>Missing Information</h3>
@@ -178,11 +138,13 @@
     }
 
     function searchGuests(searchTerm) {
-        const filteredGuests = guestList.filter(guest => 
+        console.log("Searching for:", searchTerm);
+        const filteredGuests = mockData.filter(guest => 
             Object.values(guest).some(value => 
                 value.toString().toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
+        console.log("Found", filteredGuests.length, "guests");
         renderGuestList(filteredGuests);
     }
 
@@ -191,7 +153,10 @@
     });
 
     // Initial render of all guests
-    renderGuestList(guestList);
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("Page loaded. Total guests:", mockData.length);
+        renderGuestList(mockData);
+    });
     </script>
 </body>
 </html>
