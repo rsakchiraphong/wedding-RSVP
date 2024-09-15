@@ -5,157 +5,217 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wedding Guest Finder</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            line-height: 1.6;
-        }
-        .container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            margin-top: 50px;
-        }
-        h1 { 
-            font-size: 2.5em; 
-            text-align: center; 
-            margin-bottom: 30px;
-            color: #007AFF;
-        }
-        #searchInput { 
-            width: 100%; 
-            padding: 15px; 
-            font-size: 1.2em; 
-            margin-bottom: 20px; 
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        }
-        #guestList { 
-            height: 300px; 
-            overflow-y: auto; 
-            border: 1px solid #eee; 
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .guest-item { 
-            padding: 10px; 
-            cursor: pointer; 
-            border-bottom: 1px solid #eee; 
-            transition: background-color 0.3s ease;
-        }
-        .guest-item:hover { background-color: #f9f9f9; }
-        #guestDetails { 
-            margin-top: 20px; 
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.05);
-        }
-        .missing-info { color: #FF3B30; }
-        .section { margin-bottom: 15px; }
-        .section h3 { 
-            color: #007AFF; 
-            margin-bottom: 5px;
-        }
-        #guestCount {
-            text-align: center;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1, h2 { text-align: center; color: #333; }
+        #searchInput, .form-input { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 10px; }
+        #guestList { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        .guest-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .guest-item:hover { background-color: #f0f0f0; }
+        #guestDetails, #addGuestForm, #editGuestForm { margin-top: 20px; background-color: #f9f9f9; padding: 20px; border-radius: 5px; }
+        #guestCount { text-align: center; margin-bottom: 10px; }
+        #addGuestButton, #submitGuest, #updateGuest, .editBtn, .deleteBtn { padding: 5px 10px; margin: 0 5px; background-color: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .deleteBtn { background-color: #f44336; }
+        #addGuestForm, #editGuestForm { display: none; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Wedding Guest Finder</h1>
-        <input type="text" id="searchInput" placeholder="Search for guests...">
-        <div id="guestCount"></div>
-        <div id="guestList"></div>
-        <div id="guestDetails"></div>
+    <h1>Wedding Guest Finder</h1>
+    <input type="text" id="searchInput" placeholder="Search for guests...">
+    <div id="guestCount"></div>
+    <div id="guestList"></div>
+    <div id="guestDetails"></div>
+    <button id="addGuestButton">Add New Guest</button>
+    <div id="addGuestForm">
+        <h2>Add New Guest</h2>
+        <input type="text" id="firstName" class="form-input" placeholder="First Name" required>
+        <input type="text" id="lastName" class="form-input" placeholder="Last Name" required>
+        <input type="date" id="arrivalDate" class="form-input" placeholder="Arrival Date" required>
+        <input type="text" id="arrivalFlight" class="form-input" placeholder="Arrival Flight">
+        <input type="time" id="arrivalTime" class="form-input" placeholder="Arrival Time">
+        <input type="date" id="checkOut" class="form-input" placeholder="Check Out Date">
+        <input type="text" id="depFlight" class="form-input" placeholder="Departure Flight">
+        <input type="time" id="depTime" class="form-input" placeholder="Departure Time">
+        <input type="text" id="passportNo" class="form-input" placeholder="Passport Number">
+        <input type="tel" id="tel" class="form-input" placeholder="Telephone">
+        <input type="text" id="nOrV" class="form-input" placeholder="N or V (Dietary Preference)">
+        <button id="submitGuest">Submit New Guest</button>
+    </div>
+    <div id="editGuestForm">
+        <h2>Edit Guest</h2>
+        <input type="hidden" id="editSNo">
+        <input type="text" id="editFirstName" class="form-input" placeholder="First Name" required>
+        <input type="text" id="editLastName" class="form-input" placeholder="Last Name" required>
+        <input type="date" id="editArrivalDate" class="form-input" placeholder="Arrival Date" required>
+        <input type="text" id="editArrivalFlight" class="form-input" placeholder="Arrival Flight">
+        <input type="time" id="editArrivalTime" class="form-input" placeholder="Arrival Time">
+        <input type="date" id="editCheckOut" class="form-input" placeholder="Check Out Date">
+        <input type="text" id="editDepFlight" class="form-input" placeholder="Departure Flight">
+        <input type="time" id="editDepTime" class="form-input" placeholder="Departure Time">
+        <input type="text" id="editPassportNo" class="form-input" placeholder="Passport Number">
+        <input type="tel" id="editTel" class="form-input" placeholder="Telephone">
+        <input type="text" id="editNOrV" class="form-input" placeholder="N or V (Dietary Preference)">
+        <button id="updateGuest">Update Guest</button>
     </div>
 
     <script>
-    const mockData = [
-        { sNo: 1, firstName: "Nishit", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613758106377", nOrV: "D" },
-        { sNo: 2, firstName: "Mona", lastName: "Bapna", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613588044137", nOrV: "D" },
-        { sNo: 3, firstName: "Sahil", lastName: "Sakchiraphong", arrivalDate: "24/11/2024", arrivalFlight: "CX773", arrivalTime: "5:40:00 PM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "8613588044137", nOrV: "D" },
-        { sNo: 81, firstName: "Dalpat", lastName: "Lodha", arrivalDate: "28/11/2024", arrivalFlight: "AI378", arrivalTime: "8:10:00 AM", depDate: "1/12/2024", depFlight: "AI335", depTime: "5:55:00 PM", passportNo: "", tel: "91 8003777553", nOrV: "V" },
-        { sNo: 94, firstName: "Bhagyashree Himalay", lastName: "Dassani", arrivalDate: "27/11/2024", arrivalFlight: "6E1071", arrivalTime: "10:05:00 AM", depDate: "", depFlight: "", depTime: "", passportNo: "", tel: "", nOrV: "" }
+    let guestList = [
+        {
+            sNo: 1,
+            firstName: "Nishit",
+            lastName: "Bapna",
+            arrivalDate: "11/24/24",
+            arrivalFlight: "CX773",
+            arrivalTime: "5:40:00 PM",
+            checkOut: "",
+            depFlight: "",
+            depTime: "",
+            passportNo: "",
+            tel: "8613758106377",
+            nOrV: ""
+        },
+        // ... [All 130 guests would be listed here] ...
+        {
+            sNo: 130,
+            firstName: "Stephanie Ying Tung",
+            lastName: "Chen",
+            arrivalDate: "11/27/24",
+            arrivalFlight: "FD4112",
+            arrivalTime: "3:50:00 PM",
+            checkOut: "12/1/24",
+            depFlight: "",
+            depTime: "9:50:00 PM",
+            passportNo: "682407852",
+            tel: "",
+            nOrV: "N"
+        }
     ];
 
     function renderGuestList(guests) {
-        const guestList = document.getElementById('guestList');
+        const guestListElement = document.getElementById('guestList');
         const guestCount = document.getElementById('guestCount');
-        
-        guestList.innerHTML = ''; // Clear previous entries
-        guests.forEach(guest => {
-            const guestItem = document.createElement('div');
-            guestItem.className = 'guest-item';
-            guestItem.textContent = `${guest.firstName} ${guest.lastName}`;
-            guestItem.onclick = () => showGuestDetails(guest.sNo);
-            guestList.appendChild(guestItem);
-        });
-        
+        guestListElement.innerHTML = guests.map(guest => 
+            `<div class="guest-item">
+                <span onclick="showGuestDetails(${guest.sNo})">${guest.firstName} ${guest.lastName}</span>
+                <div>
+                    <button class="editBtn" onclick="editGuest(${guest.sNo})">Edit</button>
+                    <button class="deleteBtn" onclick="deleteGuest(${guest.sNo})">Delete</button>
+                </div>
+            </div>`
+        ).join('');
         guestCount.textContent = `Displaying ${guests.length} guests`;
     }
 
     function showGuestDetails(sNo) {
-        const guest = mockData.find(g => g.sNo === sNo);
+        const guest = guestList.find(g => g.sNo === sNo);
         const detailsDiv = document.getElementById('guestDetails');
         if (guest) {
-            const missingFields = ['arrivalDate', 'arrivalFlight', 'arrivalTime', 'depDate', 'depFlight', 'depTime', 'passportNo', 'tel', 'nOrV'].filter(field => !guest[field]);
             detailsDiv.innerHTML = `
                 <h2>${guest.firstName} ${guest.lastName}</h2>
-                <div class="section">
-                    <h3>Arrival</h3>
-                    <p><strong>Date:</strong> ${guest.arrivalDate || 'Not specified'}</p>
-                    <p><strong>Flight:</strong> ${guest.arrivalFlight || 'Not specified'}</p>
-                    <p><strong>Time:</strong> ${guest.arrivalTime || 'Not specified'}</p>
-                </div>
-                <div class="section">
-                    <h3>Departure</h3>
-                    <p><strong>Date:</strong> ${guest.depDate || 'Not specified'}</p>
-                    <p><strong>Flight:</strong> ${guest.depFlight || 'Not specified'}</p>
-                    <p><strong>Time:</strong> ${guest.depTime || 'Not specified'}</p>
-                </div>
-                <div class="section">
-                    <h3>Additional Information</h3>
-                    <p><strong>Passport:</strong> ${guest.passportNo || 'Not provided'}</p>
-                    <p><strong>Contact:</strong> ${guest.tel || 'Not provided'}</p>
-                    <p><strong>Diet:</strong> ${guest.nOrV === 'V' ? 'Vegetarian' : guest.nOrV === 'N' ? 'Non-vegetarian' : 'Not specified'}</p>
-                </div>
-                <div class="section missing-info">
-                    <h3>Missing Information</h3>
-                    <p>${missingFields.length > 0 ? `Missing: ${missingFields.join(', ')}` : 'All information provided'}</p>
-                </div>
+                <p><strong>Arrival:</strong> ${guest.arrivalDate} ${guest.arrivalTime} (Flight: ${guest.arrivalFlight})</p>
+                <p><strong>Departure:</strong> ${guest.checkOut} ${guest.depTime} (Flight: ${guest.depFlight})</p>
+                <p><strong>Passport:</strong> ${guest.passportNo || 'Not provided'}</p>
+                <p><strong>Phone:</strong> ${guest.tel || 'Not provided'}</p>
+                <p><strong>Dietary Preference:</strong> ${guest.nOrV || 'Not specified'}</p>
             `;
         } else {
             detailsDiv.innerHTML = '<p>Guest not found.</p>';
         }
     }
 
-    function searchGuests(searchTerm) {
-        const filteredGuests = mockData.filter(guest => 
+    function searchGuests() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const filteredGuests = guestList.filter(guest => 
             Object.values(guest).some(value => 
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                value.toString().toLowerCase().includes(searchTerm)
             )
         );
         renderGuestList(filteredGuests);
     }
 
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-        searchGuests(e.target.value);
-    });
+    function toggleAddGuestForm() {
+        const form = document.getElementById('addGuestForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function addNewGuest(event) {
+        event.preventDefault();
+        const newGuest = {
+            sNo: guestList.length + 1,
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            arrivalDate: document.getElementById('arrivalDate').value,
+            arrivalFlight: document.getElementById('arrivalFlight').value,
+            arrivalTime: document.getElementById('arrivalTime').value,
+            checkOut: document.getElementById('checkOut').value,
+            depFlight: document.getElementById('depFlight').value,
+            depTime: document.getElementById('depTime').value,
+            passportNo: document.getElementById('passportNo').value,
+            tel: document.getElementById('tel').value,
+            nOrV: document.getElementById('nOrV').value
+        };
+        guestList.push(newGuest);
+        renderGuestList(guestList);
+        toggleAddGuestForm();
+        // Clear the form
+        document.querySelectorAll('#addGuestForm .form-input').forEach(input => input.value = '');
+    }
+
+    function editGuest(sNo) {
+        const guest = guestList.find(g => g.sNo === sNo);
+        if (guest) {
+            document.getElementById('editSNo').value = guest.sNo;
+            document.getElementById('editFirstName').value = guest.firstName;
+            document.getElementById('editLastName').value = guest.lastName;
+            document.getElementById('editArrivalDate').value = guest.arrivalDate;
+            document.getElementById('editArrivalFlight').value = guest.arrivalFlight;
+            document.getElementById('editArrivalTime').value = guest.arrivalTime;
+            document.getElementById('editCheckOut').value = guest.checkOut;
+            document.getElementById('editDepFlight').value = guest.depFlight;
+            document.getElementById('editDepTime').value = guest.depTime;
+            document.getElementById('editPassportNo').value = guest.passportNo;
+            document.getElementById('editTel').value = guest.tel;
+            document.getElementById('editNOrV').value = guest.nOrV;
+            document.getElementById('editGuestForm').style.display = 'block';
+        }
+    }
+
+    function updateGuest() {
+        const sNo = parseInt(document.getElementById('editSNo').value);
+        const guestIndex = guestList.findIndex(g => g.sNo === sNo);
+        if (guestIndex !== -1) {
+            guestList[guestIndex] = {
+                sNo: sNo,
+                firstName: document.getElementById('editFirstName').value,
+                lastName: document.getElementById('editLastName').value,
+                arrivalDate: document.getElementById('editArrivalDate').value,
+                arrivalFlight: document.getElementById('editArrivalFlight').value,
+                arrivalTime: document.getElementById('editArrivalTime').value,
+                checkOut: document.getElementById('editCheckOut').value,
+                depFlight: document.getElementById('editDepFlight').value,
+                depTime: document.getElementById('editDepTime').value,
+                passportNo: document.getElementById('editPassportNo').value,
+                tel: document.getElementById('editTel').value,
+                nOrV: document.getElementById('editNOrV').value
+            };
+            renderGuestList(guestList);
+            document.getElementById('editGuestForm').style.display = 'none';
+        }
+    }
+
+    function deleteGuest(sNo) {
+        if (confirm('Are you sure you want to delete this guest?')) {
+            guestList = guestList.filter(g => g.sNo !== sNo);
+            renderGuestList(guestList);
+        }
+    }
+
+    document.getElementById('searchInput').addEventListener('input', searchGuests);
+    document.getElementById('addGuestButton').addEventListener('click', toggleAddGuestForm);
+    document.getElementById('submitGuest').addEventListener('click', addNewGuest);
+    document.getElementById('updateGuest').addEventListener('click', updateGuest);
 
     // Initial render of all guests
-    document.addEventListener('DOMContentLoaded', function() {
-        renderGuestList(mockData);
-    });
+    renderGuestList(guestList);
     </script>
 </body>
 </html>
